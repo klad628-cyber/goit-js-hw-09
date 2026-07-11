@@ -1,0 +1,133 @@
+@import url('./reset.css');
+@import url('./base.css');
+@import url('./container.css');
+@import url('./animations.css');
+@import url('./header.css');
+@import url('./vite-promo.css');
+@import url('./badges.css');
+@import url('./back-link.css');
+@import url('./footer.css');
+
+:root {
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  color: #1f2933;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.page-header {
+  padding: 1.25rem 0;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.page-nav {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.nav-link {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.section {
+  padding: 3rem 0;
+}
+
+.page-title {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 2rem;
+}
+
+.home-copy {
+  text-align: center;
+  color: #475569;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  list-style: none;
+  padding: 0;
+}
+
+.gallery-item {
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+  background: #fff;
+}
+
+.gallery-link {
+  display: block;
+}
+
+.gallery-image {
+  display: block;
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.gallery-image:hover {
+  transform: scale(1.04);
+}
+
+.feedback-form {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.form-label {
+  font-weight: 600;
+}
+
+.feedback-form input,
+.feedback-form textarea,
+.feedback-form button {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  font: inherit;
+}
+
+.feedback-form textarea {
+  resize: vertical;
+}
+
+.feedback-form button {
+  cursor: pointer;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  font-weight: 600;
+}
+
+.feedback-form button:hover {
+  background: #1d4ed8;
+}
