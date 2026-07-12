@@ -1,16 +1,29 @@
 const STORAGE_KEY = 'feedback-form-state';
 const form = document.querySelector('.feedback-form');
-const emailInput = form.elements.email;
-const messageInput = form.elements.message;
 
 const formData = {
   email: '',
   message: '',
 };
 
-const saveData = () => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+const throttle = (callback, delay = 500) => {
+  let timeoutId = null;
+
+  return (...args) => {
+    if (timeoutId !== null) {
+      return;
+    }
+
+    timeoutId = setTimeout(() => {
+      callback(...args);
+      timeoutId = null;
+    }, delay);
+  };
 };
+
+const saveData = throttle(() => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+}, 500);
 
 const populateForm = () => {
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -23,8 +36,14 @@ const populateForm = () => {
     const parsed = JSON.parse(saved);
     formData.email = parsed.email ?? '';
     formData.message = parsed.message ?? '';
-    emailInput.value = formData.email;
-    messageInput.value = formData.message;
+
+    if (form.email) {
+      form.email.value = formData.email;
+    }
+
+    if (form.message) {
+      form.message.value = formData.message;
+    }
   } catch (error) {
     console.error('Failed to parse form data', error);
   }
@@ -33,14 +52,11 @@ const populateForm = () => {
 form.addEventListener('input', event => {
   const { name, value } = event.target;
 
-  if (name === 'email') {
-    formData.email = value.trim();
+  if (!Object.prototype.hasOwnProperty.call(formData, name)) {
+    return;
   }
 
-  if (name === 'message') {
-    formData.message = value.trim();
-  }
-
+  formData[name] = value.trim();
   saveData();
 });
 
