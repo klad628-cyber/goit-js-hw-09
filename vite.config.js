@@ -1,11 +1,10 @@
 import { defineConfig } from 'vite';
-import { glob } from 'glob';
-import { basename } from 'path';
+import { fileURLToPath } from 'node:url';
 import injectHTML from 'vite-plugin-html-inject';
 import FullReload from 'vite-plugin-full-reload';
 import SortCss from 'postcss-sort-media-queries';
 
-export default defineConfig(({ command }) => {
+export default defineConfig(() => {
   return {
     define: {
       global: 'globalThis',
@@ -13,10 +12,13 @@ export default defineConfig(({ command }) => {
     build: {
       sourcemap: true,
       rollupOptions: {
-        input: glob.sync('src/*.html').reduce((entries, file) => {
-          entries[basename(file, '.html')] = file;
-          return entries;
-        }, {}),
+        input: {
+          index: fileURLToPath(new URL('src/index.html', import.meta.url)),
+          gallery: fileURLToPath(
+            new URL('src/1-gallery.html', import.meta.url)
+          ),
+          form: fileURLToPath(new URL('src/2-form.html', import.meta.url)),
+        },
         output: {
           manualChunks(id) {
             if (id.includes('node_modules')) {
