@@ -1,24 +1,19 @@
 import { defineConfig } from 'vite';
-import { fileURLToPath } from 'node:url';
+import { glob } from 'glob';
 import injectHTML from 'vite-plugin-html-inject';
 import FullReload from 'vite-plugin-full-reload';
 import SortCss from 'postcss-sort-media-queries';
 
-export default defineConfig(() => {
+export default defineConfig(({ command }) => {
   return {
     define: {
-      global: 'globalThis',
+      [command === 'serve' ? 'global' : '_global']: {},
     },
+    root: 'src',
     build: {
       sourcemap: true,
       rollupOptions: {
-        input: {
-          index: fileURLToPath(new URL('src/index.html', import.meta.url)),
-          gallery: fileURLToPath(
-            new URL('src/1-gallery.html', import.meta.url)
-          ),
-          form: fileURLToPath(new URL('src/2-form.html', import.meta.url)),
-        },
+        input: glob.sync('./src/*.html'),
         output: {
           manualChunks(id) {
             if (id.includes('node_modules')) {
@@ -39,12 +34,12 @@ export default defineConfig(() => {
           },
         },
       },
-      outDir: 'dist',
+      outDir: '../dist',
       emptyOutDir: true,
     },
     plugins: [
       injectHTML(),
-      FullReload(['./*.html']),
+      FullReload(['./src/**/**.html']),
       SortCss({
         sort: 'mobile-first',
       }),

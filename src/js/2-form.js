@@ -1,78 +1,51 @@
-const STORAGE_KEY = 'feedback-form-state';
+'use strict';
+
 const form = document.querySelector('.feedback-form');
+const emailInput = form.elements.email;
+const messageInput = form.elements.message;
 
 const formData = {
   email: '',
   message: '',
 };
 
-const throttle = (callback, delay = 500) => {
-  let timeoutId = null;
+function addData(obj) {
+  form.addEventListener('input', () => {
+    obj.email = emailInput.value.trim();
+    obj.message = messageInput.value.trim();
 
-  return (...args) => {
-    if (timeoutId !== null) {
+    localStorage.setItem('feedback-form-state', JSON.stringify(obj));
+  });
+}
+
+function checkStorage(obj) {
+  const data = JSON.parse(localStorage.getItem('feedback-form-state')) || {};
+  obj.email = data.email ?? '';
+  obj.message = data.message ?? '';
+
+  emailInput.value = data.email ?? '';
+  messageInput.value = data.message ?? '';
+}
+
+function validateForm(obj) {
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+
+    if (Object.values(obj).some(item => item.trim() === '')) {
+      alert('Fill please all fields');
       return;
     }
 
-    timeoutId = setTimeout(() => {
-      callback(...args);
-      timeoutId = null;
-    }, delay);
-  };
-};
+    console.log({ ...obj });
 
-const saveData = throttle(() => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
-}, 500);
+    obj.email = '';
+    obj.message = '';
 
-const populateForm = () => {
-  const saved = localStorage.getItem(STORAGE_KEY);
+    localStorage.removeItem('feedback-form-state');
+    form.reset();
+  });
+}
 
-  if (!saved) {
-    return;
-  }
-
-  try {
-    const parsed = JSON.parse(saved);
-    formData.email = parsed.email ?? '';
-    formData.message = parsed.message ?? '';
-
-    if (form.email) {
-      form.email.value = formData.email;
-    }
-
-    if (form.message) {
-      form.message.value = formData.message;
-    }
-  } catch (error) {
-    console.error('Failed to parse form data', error);
-  }
-};
-
-form.addEventListener('input', event => {
-  const { name, value } = event.target;
-
-  if (!Object.prototype.hasOwnProperty.call(formData, name)) {
-    return;
-  }
-
-  formData[name] = value.trim();
-  saveData();
-});
-
-form.addEventListener('submit', event => {
-  event.preventDefault();
-
-  if (!formData.email || !formData.message) {
-    alert('Fill please all fields');
-    return;
-  }
-
-  console.log(formData);
-  localStorage.removeItem(STORAGE_KEY);
-  form.reset();
-  formData.email = '';
-  formData.message = '';
-});
-
-populateForm();
+checkStorage(formData);
+addData(formData);
+validateForm(formData);
