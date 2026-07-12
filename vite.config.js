@@ -13,7 +13,7 @@ export default defineConfig(({ command }) => {
     build: {
       sourcemap: true,
       rollupOptions: {
-        input: glob.sync('public/*.html').reduce((entries, file) => {
+        input: glob.sync('src/*.html').reduce((entries, file) => {
           entries[basename(file, '.html')] = file;
           return entries;
         }, {}),
